@@ -1,0 +1,150 @@
+{% extends "auth/authbase.html" %}
+
+{% block head %}
+<script>
+    function handleCredentialResponse(response) {
+        // Debug log to see the response
+        console.log('Google response:', response);
+
+        fetch('/auth/google/callback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                // Send the entire credential
+                credential: response.credential 
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('Error:', data.error);
+                alert(data.error);
+                signOut();
+            } else if (data.redirect) {
+                
+                // Added sweetAlert after every successful login
+                Swal.fire({
+                        title: data.success ? 'Success!' : 'Error!',
+                        text: data.message,
+                        icon: data.success ? 'success' : 'error',
+                        confirmButtonColor: '#fd7e14'
+                    }).then((result) => {
+                        if (result.isConfirmed && data.success) {
+                            window.location.href = data.redirect
+                        }
+                    });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred during login');
+        });
+    }
+
+    function signOut() {
+        google.accounts.id.disableAutoSelect();
+        window.location.href = '/auth/logout';
+    }
+</script>
+<style>
+    /* Style the container */
+    .auth-container {
+        border: 2px solid #EB5700;
+        border-radius: 15px;
+        padding: 3px;
+        box-shadow: 0 10px 30px rgba(235, 87, 0, 0.1);  
+        width: 100%;
+        max-width: 600px;  
+        margin: 0 auto;
+        transition: all 0.3s ease; 
+    }
+
+    .auth-container:hover {
+        box-shadow: 0 15px 40px rgba(235, 87, 0, 0.15); 
+        transform: translateY(-2px);  
+    }
+
+    /* Style for inner white container */
+    .auth-inner {
+        background: white;
+        border-radius: 12px;
+        padding: 3rem 2.5rem; 
+        min-height: 400px;  
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* Title styling */
+    .auth-inner h1 {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+    }
+
+    /* Subtitle styling */
+    .auth-inner p {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    /* Style Google button container */
+    .g_id_signin {
+        margin-top: 2rem;
+        transition: transform 0.2s ease;
+    }
+
+    .g_id_signin:hover {
+        transform: scale(1.02);  
+    }
+
+    /* Override Google button styles */
+    .g_id_signin > div {
+        background: black !important;
+        color: white !important;
+    }
+
+    
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container vh-100">
+    <div class="row h-100 align-items-center justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="auth-container">
+                <div class="auth-inner">
+                    <h1 class="mb-4">MSU-IIT LunchKit Login</h1>
+                    <p class="text-muted mb-4">Please sign in with your institutional email</p>
+                    
+                    <!-- Google Sign-In Button -->
+                    <div class="d-flex justify-content-center">
+                        <div id="g_id_onload"
+                            data-client_id="{{ config.GOOGLE_CLIENT_ID }}"
+                            data-context="signin"
+                            data-ux_mode="popup"
+                            data-callback="handleCredentialResponse"
+                            data-auto_prompt="false">
+                        </div>
+                        <div class="g_id_signin"
+                            data-type="standard"
+                            data-shape="rectangular"
+                            data-theme="filled_black" 
+                            data-text="signin_with"
+                            data-size="large"
+                            data-logo_alignment="left">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

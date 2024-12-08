@@ -1,0 +1,62 @@
+{% extends "admin/adminbase.html" %}
+
+{% block content %}
+<table class="store-table">
+    <thead>
+        <tr>
+            <th>Store ID</th>
+            <th>Store Name</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for store in storeowners %}
+        <tr>
+            <td>
+                {{ store.StoreOwnerId }}
+            </td>
+            <td>
+                {{ store.OwnerName }}
+            </td>
+            <td>
+                {{ store.Application_Status }}
+            </td>
+            <td>
+                <form action="{{ url_for('admin.RejectApplication', StoreOwnerId=store.StoreOwnerId) }}" method="POST">
+                    {{ form.csrf_token() }}
+                    <button type="submit" class="btn btn-success">Back to Registration</button>
+                  </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<style>
+/* Table styling */
+.store-table {
+    width: 100%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.store-table th, .store-table td {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 12px;
+}
+
+.store-table thead th {
+    background-color: #FF7E0E;
+    color: white;
+}
+
+.store-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+</style>
+{% endblock %}

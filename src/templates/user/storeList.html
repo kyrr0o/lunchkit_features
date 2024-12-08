@@ -1,0 +1,76 @@
+{% extends "user/base.html" %}
+{% from 'macros.html' import storeCard %}
+
+{% block content %}
+
+
+<div class="container mt-5">
+    <div class="row gy-3 gx-4">
+{% for store in stores %}
+  <div class="col item-card" data-category="{{ store.Category|lower }}" data-name="{{ store.StoreName|lower }}">
+      <div class="card h-100 border-0 shadow-sm" style="cursor: pointer;" onclick="redirect({{ store['StoreId'] }})">
+          <div class="position-relative">
+              <div class="bg-light rounded-3 p-4 text-center">
+                  {% if store['StorePhoto'] %}
+                      <img src="{{ store['StorePhoto'] }}" class="card-img-top" alt="{{ store['StoreName'] }}" 
+                           style="max-height: 150px; object-fit: contain;">
+                  {% else %}
+                      <div class="bg-secondary rounded-circle p-4 mx-auto" style="width: 100px; height: 100px;">
+                          <i class="bi bi-cart text-white fs-1"></i>
+                      </div>
+                  {% endif %}
+              </div>
+          </div>
+          <div class="card-body">
+              <h5 class="card-title mb-2">{{ store['StoreName'] }}</h5>
+              <p class="card-text text-muted small mb-2">{{ store['StoreDescription'] }}</p>
+          </div>
+      </div>
+     
+  </div>
+  {% endfor %}
+    </div>
+</div>
+
+<script>
+    function showAlert(store) {
+    Swal.fire({
+        title: store.StoreName,
+        html: `
+            <div class="text-left">
+                <div class="mb-3">
+                    <img src="${store.StorePhoto}" class="img-fluid rounded" style="max-width: 200px;">
+                </div>
+                <div class="mb-2">
+                    <strong>Description:</strong><br>
+                    <p class="text-muted">${store.StoreDescription}</p>
+                </div>
+            </div>
+        `,
+        width: '400px',
+        showCancelButton: true,
+        confirmButtonText: 'Go to Store',
+        cancelButtonText: 'Close',
+        customClass: {
+            container: 'custom-swal-container',
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            htmlContainer: 'custom-swal-html',
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = `/store-admin/visit-store/${store.StoreId}`;
+        }
+    });
+}
+
+
+function redirect(storeId){
+    window.location.href = `/store-admin/visit-store/${storeId}`;
+}
+</script>
+
+
+{% endblock %}

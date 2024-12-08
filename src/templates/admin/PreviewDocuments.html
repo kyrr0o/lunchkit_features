@@ -1,0 +1,175 @@
+{% extends "admin/adminbase.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+<!-- Displaying applicant's details -->
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Store Name</th>
+        <th scope="col">Sanitary Permit</th>
+        <th scope="col">Certificate Of Business Name Registration</th>
+        <th scope="col">Business Permit</th>
+        <th scope="col">Fire Safety Inspection Certifiacate</th>
+        <th scope="col">Certificate of Registration</th>
+        <th scope="col">Tax Payment Form</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for document in documents %}
+      {% if document.ApplicationStatus == 'Pending' %}
+        <tr>
+          <td>{{ document.StoreName }}</td>
+          <td>
+            <img src="{{ document.SanitaryPermit }}" class="img-fluid" alt="Sanitary Permit" 
+                 style="cursor: pointer; width: 100px; height: 100px;" 
+                 onclick="previewFile('{{ document.SanitaryPermit }}')">
+          </td>
+          <td>
+            <img src="{{ document.CertificateOfBusinessNameRegistration }}" class="img-fluid" alt="Certificate of Business Name Registration" 
+                 style="cursor: pointer; width: 100px; height: 100px;" 
+                 onclick="previewFile('{{ document.CertificateOfBusinessNameRegistration }}')">
+          </td>
+          <td>
+            <img src="{{ document.BusinessPermit }}" class="img-fluid" alt="Business Permit" 
+                 style="cursor: pointer; width: 100px; height: 100px;" 
+                 onclick="previewFile('{{ document.BusinessPermit }}')">
+          </td>
+          <td>
+            <img src="{{ document.FireSafetyInspectionCertificate }}" class="img-fluid" alt="Fire Safety Inspection Certificate" 
+                 style="cursor: pointer; width: 100px; height: 100px;" 
+                 onclick="previewFile('{{ document.FireSafetyInspectionCertificate }}')">
+          </td>
+          <td>
+            <img src="{{ document.CertificateOfRegistration }}" class="img-fluid" alt="Certificate of Registration" 
+                 style="cursor: pointer; width: 100px; height: 100px;" 
+                 onclick="previewFile('{{ document.CertificateOfRegistration }}')">
+          </td>
+          <td>
+            <img src="{{ document.TaxPaymentForm }}" class="img-fluid" alt="Tax Payment Form" 
+                 style="cursor: pointer; width: 100px; height: 100px;" 
+                 onclick="previewFile('{{ document.TaxPaymentForm }}')">
+          </td>
+          <td>
+            <form action="{{ url_for('admin.VerifyStatus', StoreOwnerId=document.StoreOwnerId) }}" method="POST">
+              {{ form.csrf_token() }}
+              <button type="submit" class="btn btn-success">Verify</button>
+            </form>
+            <button class="btn btn-danger" onclick="rejectApplication('{{ document.StoreOwnerId }}')">Reject</button>
+          </td>
+      {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Image Preview Modal -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imagePreviewLabel">Image Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="previewImage" src="" alt="Preview" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<style>
+    .container-fluid-pending {
+      width: 300px;
+      padding: 20px;
+      background-color: white;
+      border: 2px solid #FFA500; /* Orange border */
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    
+    .application-id {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    
+    hr {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 10px 0;
+    }
+    
+    .store-info {
+      font-size: 14px;
+      color: #555;
+      margin: 5px 0;
+    }
+    
+    .view-details-btn {
+      background-color: #FFA500; /* Orange button */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background-color 0.3s ease;
+    }
+    
+    .view-details-btn:hover {
+      background-color: #e69500; /* Darker orange on hover */
+    }
+
+    .table th, .pendingtable td {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 12px;
+  }
+
+  .table thead th {
+    background-color: #FF7E0E;
+    color: white;
+  }
+
+  .table tbody tr:hover {
+    background-color: #f9f9f9;
+  }
+    
+</style>
+<script>
+  function confirmVerification(StoreName, ApplicationStatus){
+    return confirm(`Are you sure you want to verify ${StoreName}'s application status of ${ApplicationStatus}?`);
+  }
+
+</script>
+
+<script>
+  function previewFile(imageUrl) {
+    // Set the image URL in the modal
+    document.getElementById('previewImage').src = imageUrl;
+    // Show the modal
+    var modal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
+    modal.show();
+  }
+
+  function rejectApplication(storeOwnerId) {
+    if (confirm("Are you sure you want to reject this application?")) {
+      // Perform rejection logic (to be implemented as needed)
+      alert("Application for StoreOwnerId " + storeOwnerId + " has been rejected.");
+    }
+  }
+</script>
+{%endblock%}

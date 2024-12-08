@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>MSU-IIT LunchKit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/userHomepage.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+
+</head>
+<body>
+
+    <header class="navbar navbar-expand-lg" style="padding: 3px 30px; background-color: #FDEEEA; border-bottom: 2px solid #ddd; z-index: 1000; position: sticky; top: 0;">
+        <a class="navbar-brand" style="font-size: 2rem; color: #EB5700;" href="/home"><strong>LunchKit</strong></a>
+
+        <div class="d-flex justify-content-end w-100">
+            {% if user_data and user_data.isAdmin %}
+            <div class="nav-item">
+                <a href="{{ url_for('admin.PendingList') }}" class="nav-link d-flex align-items-center gap-2">
+                    <i class="bi bi-shield-lock"></i>
+                    Admin Homepage
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <nav class="col-md-2 col-lg-2 d-md-block bd-sidebar">
+                <ul>
+                    <li><a href="{{ url_for('main.dashboard') }}"><div class="icon"><ion-icon name="home-outline"></ion-icon></div><span class="title">Dashboard</span></a></li>
+                    <li><a href="{{ url_for('main.store_list_page') }}"><div class="icon"><ion-icon name="storefront-outline"></ion-icon></div><span class="title">Stores</span></a></li>
+                    <li><a href="#"><div class="icon"><ion-icon name="cart-outline"></ion-icon></div><span class="title">Orders</span></a></li>
+                    <li><a href="{{url_for('auth.logout')}}"><div class="icon"><ion-icon name="log-out-outline"></ion-icon></div><span class="title">Log Out</span></a></li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-12 col-md-9 col-xl-10">
+                <div class="container">
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+
+    
+    <script src="{{ url_for('static', filename='js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+</body>
+</html>
+
+

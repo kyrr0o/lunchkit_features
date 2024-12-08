@@ -1,0 +1,298 @@
+{% extends "admin/adminbase.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+<div class="container">
+  <table class="pending-table">
+    <thead>
+      <tr>
+        <th scope="col">Store Name</th>
+        <th scope="col">Owner Name</th>
+        <th scope="col">Store Owner ID</th>
+        <th scope="col">Application Status</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for applicant in applicants%}
+        {% if applicant.ApplicationStatus == 'Pending' %}
+      <tr>
+            <td>{{ applicant.StoreName }}</td>
+            <td>{{ applicant.OwnerName }}</td>
+            <td>{{ applicant.StoreOwnerId }}</td>
+            <td>{{ applicant.ApplicationStatus }}</td>
+            <td>
+              <button type="button" class="btn btn-preview"  data-bs-toggle="modal" data-bs-target="#previewModal-{{ applicant.StoreApplicationId }}">View Documents</button>
+            </td>
+            <div class="modal fade" id="previewModal-{{ applicant.StoreApplicationId }}" tabindex="-1" aria-labelledby="previewModalLabel-{{ applicant.StoreApplicationId }}" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalLabel-{{ applicant.StoreApplicationId }}">Documents for {{ applicant.StoreName }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                    {% for document in documents %}
+                      {% if document.StoreApplicationId == applicant.StoreApplicationId %}
+                      <div>
+                        <img src="{{ document.SanitaryPermit }}" class="img-fluid" alt="Sanitary Permit" 
+                             style="cursor: pointer; " 
+                             onclick="previewFile('{{ document.SanitaryPermit }}')">
+                      </div>
+                      <div>
+                        <img src="{{ document.CertificateOfBusinessNameRegistration }}" class="img-fluid" alt="Certificate of Business Name Registration" 
+                             style="cursor: pointer;" 
+                             onclick="previewFile('{{ document.CertificateOfBusinessNameRegistration }}')">
+                      </div>
+                      <div>
+                        <img src="{{ document.BusinessPermit }}" class="img-fluid" alt="Business Permit" 
+                             style="cursor: pointer;" 
+                             onclick="previewFile('{{ document.BusinessPermit }}')">
+                      </div>
+                      <div>
+                        <img src="{{ document.FireSafetyInspectionCertificate }}" class="img-fluid" alt="Fire Safety Inspection Certificate" 
+                             style="cursor: pointer;" 
+                             onclick="previewFile('{{ document.FireSafetyInspectionCertificate }}')">
+                      </div>
+                      <div>
+                        <img src="{{ document.CertificateOfRegistration }}" class="img-fluid" alt="Certificate of Registration" 
+                             style="cursor: pointer; " 
+                             onclick="previewFile('{{ document.CertificateOfRegistration }}')">
+                        </div>
+                      <div>
+                        <img src="{{ document.TaxPaymentForm }}" class="img-fluid" alt="Tax Payment Form" 
+                             style="cursor: pointer; " 
+                             onclick="previewFile('{{ document.TaxPaymentForm }}')">
+                      </div>
+
+                        <form id="verifyForm-{{document.StoreOwnerId}}">
+                          {{ form.csrf_token() }}
+                          <button type="button" onclick="confirmVerify('{{ document.StoreOwnerId }}','{{ applicant.storeName }}')" class="btn btn-success">Verify</button>
+                        </form>
+                        <form id="rejectForm-{{ document.StoreOwnerId }}">
+                          {{ form.csrf_token() }}
+                          <button type="button" onclick="confirmReject('{{ document.StoreOwnerId }}')" class="btn btn-success">Reject</button>
+                        </form>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>       
+      </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+
+
+<!-- Image Preview Modal -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imagePreviewLabel">Image Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="previewImage" src="" alt="Preview" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function confirmReject(StoreOwnerId){
+    const bsModal = bootstrap.Modal.getInstance(document.querySelector('.modal.show'));
+    if (bsModal) {
+        bsModal.hide();
+    }
+
+    console.log("StoreOwnerId:", StoreOwnerId);
+    const form = document.getElementById(`rejectForm-${StoreOwnerId}`);
+    console.log("Form:", form);
+    const token = document.querySelector('input[name="csrf_token"]').value;
+    console.log("Token:", token);
+
+    Swal.fire({
+        title: 'Reject Application',
+        text: 'Please provide a reason for rejection:',
+        input: 'textarea', // Changed from textArea
+        inputPlaceholder: 'Enter rejection message...',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Reject',
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+    }).then((result) => {
+      if(result.isConfirmed){
+        Swal.fire({
+          title: 'Processing...',
+          html: `Please wait while we process rejection`,
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+        fetch(`/admin/RejectApplication/${StoreOwnerId}`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: result.value
+          })
+        }).then(response => response.json())
+          .then(data => {
+            if(data.success){
+              Swal.fire(
+                'Rejected!',
+                'Application has been rejected.',
+                'success'
+              ).then(() => {
+                window.location.href = data.redirect;
+              })
+            }
+          })
+      }
+    })
+  }
+
+  function confirmVerify(storeOwnerId,storeName) {
+    const bsModal = bootstrap.Modal.getInstance(document.querySelector('.modal.show'));
+    if (bsModal) {
+        bsModal.hide();
+    }
+
+    const form = document.getElementById(`verifyForm-${storeOwnerId}`);
+    const token = document.querySelector('input[name="csrf_token"]').value;
+
+    Swal.fire({
+        title: 'Verify Application',
+        text: `Do you want to verify ${storeName} for LunchKit?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Verify',
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+    }).then((result) => {
+        if(result.isConfirmed) {
+            Swal.fire({
+                title: 'Processing...',
+                html: `Please wait while we process verification`,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            fetch(`/admin/VerifyStatus/${storeOwnerId}`, {
+              method: 'POST',
+              headers: {
+                'X-CSRFToken': token,
+                'Content-Type': 'application/json'
+              },
+            }).then(response => response.json())
+              .then(data => {
+                if(data.success){
+                  Swal.fire(
+                    'Verified',
+                    `${storeName} Application verified successfully`,
+                    'success'
+                  ).then(() => {
+                    window.location.href = data.redirect;
+                  })
+                }
+              })
+        }
+    });
+  }
+
+  function previewFile(imageUrl) {
+    // Set the image URL in the modal
+    document.getElementById('previewImage').src = imageUrl;
+    // Show the modal
+    var modal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
+    modal.show();
+  }
+</script>
+
+<style>
+.modal-body img {
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+.pending-table {
+    width: 100%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.pending-table th, .pendingtable td {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 12px;
+}
+
+.pending-table thead th {
+    background-color: #FF7E0E;
+    color: white;
+}
+
+.pending-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.application-id {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 10px 0;
+}
+
+.store-info {
+  font-size: 14px;
+  color: #555;
+  margin: 5px 0;
+}
+
+.view-details-btn {
+  background-color: #FFA500; /* Orange button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.view-details-btn:hover {
+  background-color: #e69500; /* Darker orange on hover */
+}
+
+
+</style>
+{% endblock %}

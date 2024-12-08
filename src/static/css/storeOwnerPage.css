@@ -1,0 +1,259 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #ff6c00;
+    --sidebar-width: 80px;
+    --right-sidebar-width: 400px;
+    --top-nav-height: 80px;
+    --content-spacing: 0.75rem;
+}
+
+body {
+    overflow: hidden;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr var(--right-sidebar-width);
+    height: 100vh;
+    background-color: #f5f5f5;
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Left Sidebar */
+.left-sidebar {
+    background-color: var(--primary-color);
+    padding: 1rem 0;
+    height: 100vh;
+    position: fixed;
+    width: var(--sidebar-width);
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.nav-links {
+    margin-top: 2rem;
+    list-style: none;
+    padding: 0;
+}
+
+.nav-item {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.nav-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-link span {
+    display: none;
+}
+
+.nav-link ion-icon {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item.active .nav-link {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Main Content */
+.main-content {
+    grid-column: 2;
+    padding: var(--content-spacing);
+    margin-left: 2rem;
+    margin-right: 2rem;
+    overflow-y: auto;
+    height: 100vh;
+}
+
+/* Top Navigation */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: white;
+    border-radius: 8px;
+    margin-bottom: var(--content-spacing);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.store-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.store-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+}
+
+.store-details h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+    color: #333;
+}
+
+.store-details p {
+    color: #666;
+    font-size: 0.875rem;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f5;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    width: 300px;
+}
+
+.search-bar input {
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+    padding-right: 0.5rem;
+}
+
+.search-bar ion-icon {
+    color: #666;
+}
+
+/* Category Tabs */
+.category-tabs {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: var(--content-spacing);
+}
+
+.category-tab {
+    width: 7rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.category-tab span {
+    display: none;
+}
+
+.category-tab ion-icon {
+    font-size: 1.5rem;
+}
+
+.category-tab:hover {
+    background-color: #f5f5f5;
+}
+
+.category-tab.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+
+.category-tabs button:last-child {
+    margin-left: auto; /* Push the Add Item button to the right */
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.category-tabs button:last-child:hover {
+    background-color: #ff5500;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+
+
+
+/* Right Sidebar */
+.right-sidebar {
+    background-color: white;
+    padding: var(--content-spacing);
+    border-left: 1px solid #eee;
+    height: 100vh;
+    position: fixed;
+    right: 0;
+    width: var(--right-sidebar-width);
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.item-form {
+    padding: 0.75rem;
+}
+
+/* Menu Grid */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.75rem;
+    padding: 0.75rem;
+}
+
+/* Utilities */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

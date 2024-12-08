@@ -1,0 +1,162 @@
+{% extends 'store/storeAdminDashboard.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        <nav class="col-md-2 col-lg-2 d-md-block bd-sidebar">
+            
+      
+            <ul>
+                
+                <li><a href="{{ url_for('store-admin.storeorders', StoreOwnerId = storeDetails.StoreOwnerId)}}"><div class="icon"><ion-icon name="cart-outline"></ion-icon></div><span class="title">Orders</span></a></li>
+                <li><a href="{{ url_for('store-admin.storecontents', StoreOwnerId = storeDetails.StoreOwnerId )}}"><div class="icon"><ion-icon name="storefront-outline"></ion-icon></div><span class="title">My Store</span></a></li>
+                <li><a href="{{ url_for('store-admin.logoutStore') }}"><div class="icon"><ion-icon name="log-out-outline"></ion-icon></div><span class="title">Log Out</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- {{ url_for('store-admin.storecontents', StoreOwnerId = 3 )}} -->
+
+
+        <!-- Main Content -->
+        <main class="col-12 col-md-9 col-xl-10">
+            <div class="container mt-5">
+                <div class="row gy-3 gx-4">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">{{ storeDetails.StoreName }}</h5>
+                                <p class="card-text text-muted">Orders Here</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Welcome to your Dashboard</h5>
+                                <p class="card-text">The Orders will show here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+            
+        </main>
+    </div>
+</div>
+
+<style>
+
+/* Tabs styling */
+.tabs {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.tab {
+    border: 1px solid #FF7E0E;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-right: 10px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.tab.active {
+    background-color: #FF7E0E;
+    color: white;
+    font-weight: bold;
+}
+
+.search-bar {
+    margin-left: auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+}
+
+/* Cards container */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* Order card */
+.order-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: white;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.store-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.card-body {
+    margin-bottom: 15px;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.items-table th,
+.items-table td {
+    text-align: left;
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.total-amount {
+    font-weight: bold;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.complete-btn {
+    background-color: #FF7E0E;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.complete-btn:hover {
+    background-color: #ff6c00;
+}
+
+.cancel-btn:hover {
+    background-color: #f2f2f2;
+}
+</style>
+
+{% endblock%}

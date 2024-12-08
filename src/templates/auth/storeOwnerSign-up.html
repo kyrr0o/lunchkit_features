@@ -1,0 +1,218 @@
+{% extends "auth/authbase.html" %}
+
+{% block head %}
+   <link rel="stylesheet" href="{{url_for('static', filename='css/formStyle.css')}}">
+{% endblock %}
+
+
+{% block content %}
+<div>
+    <div class="container">
+        <div class="form-container">
+            <h2 class="text-center mb-4">LunchKit Store Owner Registration</h2>
+            <form id="signupForm" action="{{ url_for('auth.storeowner_signup_create') }}" method="POST">
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-3">
+                    <label for="ownername" class="form-label">Owner Name</label>
+                    {{ form.ownername(class="form-control", id="ownername") }}
+                    <div class="error-feedback" id="ownername-error"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    {{ form.email(class="form-control", id="email") }}
+                    <div class="error-feedback" id="email-error"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="mobile" class="form-label">Mobile Number</label>
+                    {{ form.mobile(class="form-control", id="mobile", placeholder="09XXXXXXXXX") }}
+                    <div class="error-feedback" id="mobile-error"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    {{ form.password(class="form-control", id="password") }}
+                    <div class="error-feedback" id="password-error"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="confirm_password" class="form-label">Confirm Password</label>
+                    {{ form.confirm_password(class="form-control", id="confirm_password") }}
+                    <div class="error-feedback" id="confirm_password-error"></div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-orange">Sign Up</button>
+                </div>
+
+                <div class="alert alert-success mt-3" role="alert" id="success-message" style="display: none;"></div>
+                <div class="alert alert-danger mt-3" role="alert" id="error-message" style="display: none;"></div>
+            </form>
+
+            <div class="mt-3 d-flex align-items-center gap-2">
+                <p class="mb-0">Already have an account?</p>
+                <a href="{{url_for('auth.ownerLogin')}}" class="text-orange text-decoration-none hover-underline">Login</a>
+            </div>
+        </div>
+
+       
+    </div>
+
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Reference the signup form
+            const form = document.getElementById('signupForm');
+            
+            // On sumbit even Handler
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Reset error messages
+                document.querySelectorAll('.error-feedback').forEach(el => el.style.display = 'none');
+                document.getElementById('success-message').style.display = 'none';
+                document.getElementById('error-message').style.display = 'none';
+    
+                // Create FormData object from form
+                const formData = new FormData(form);
+                
+                // Convert FormData to plain object
+                const plainFormData = Object.fromEntries(formData.entries());
+                
+                
+                try {
+
+                    // Api call to the server to send form data
+                    const response = await fetch('/auth/storeOwnerSign-up/create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded', 
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        // Convert form data to URL encoded string
+                        body: new URLSearchParams(plainFormData).toString()
+                    });
+                 
+
+                    // Gets the response
+                    const data =  await response.json()
+
+                    // Modified error call, when this is triggered meaning an existing user is already found in the database
+                    if(response.status === 409){
+
+
+                        // Prompt the user if they want to use their previously sent registration data or overwrite old to have a  new registration data 
+                        const result = await Swal.fire({
+                            title: 'Owner Registration Verification',
+                            text: 'We found an existing store owner but does not have a store application. Would you like to continue using the previous store owner data or overwrite with this new one?',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Use Previous Data',
+                            cancelButtonText: 'Use New Data',
+                            confirmButtonColor: '#fd7e14',
+                            cancelButtonColor: '#6c757d'
+                        }); 
+
+                        // Make a new request to a different endpoint for handling the choice
+                        const choiceResponse = await fetch('/auth/storeOwnerSign-up/handle-choice', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        body: new URLSearchParams({
+                            ...plainFormData,
+                                choice: result.isConfirmed ? 'use_previous' : 'use_new',
+                            }).toString()
+                        });
+
+                        // Send get the response after the choice and send to response handler
+                        const choiceData = await choiceResponse.json();
+                        handleResponse(choiceData,form);
+                        return
+                    }
+                    
+                    // If data is not caught in 309 (Their Application status is not 'Default') they are still sent to the handler
+                    handleResponse(data,form);
+
+                } catch (error) {
+                    console.error(error)
+                    handleError(error)
+                }
+            });
+        });
+
+
+        // Response handler for final verification of data
+        function handleResponse(data,form){
+
+            // (Used to clarify difference in data with 309 STATUS)
+            // Checks if the the final_check content is in the data object, if it exists then check if it is true or not
+            if(data.success === true && ('final_check' in data ? data.final_check : true )){
+                Swal.fire({
+                    title: 'Success!',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonColor: '#fd7e14'
+                }).then((result) => {
+                    if(result.isConfirmed && data.shouldRedirect) {
+                        form.reset();
+                        window.location.href = '/auth/register-store';
+                    }
+                });
+            
+            // If the Application is still in review, don't send the user to the next route and block their form submission 
+            } else if (data.success === 'Waiting') {
+                Swal.fire({
+                    title: 'Application In Review',
+                    text: data.message,
+                    icon: 'info',
+                    confirmButtonColor: '#fd7e14'
+                });
+
+            // This is when the user does not pick between the current and old data in the 309 state, they get a duplicate entry in db error for it
+            } else if (data.final_check == false) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: data.message,
+                    icon: 'error',
+                    confirmButtonColor: '#fd7e14'
+                });
+            } else {
+                handleError(data);
+            }
+        }
+
+
+        // Error handler
+        function handleError(error) {
+            if (error.errors) {
+                // Handle validation errors
+                for (const [field, message] of Object.entries(error.errors)) {
+                    const errorElement = document.getElementById(`${field}-error`);
+                    if (errorElement) {
+                        errorElement.textContent = message;
+                        errorElement.style.display = 'block';
+                    }
+                }
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: error.message || 'An error occurred during registration',
+                    icon: 'error',
+                    confirmButtonColor: '#fd7e14'
+                });
+            }
+        }
+
+
+
+
+        </script>
+</div>
+{% endblock %}

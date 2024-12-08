@@ -1,0 +1,207 @@
+{% extends "user/base.html" %}
+
+{% block content %}
+<div class="d-flex position-relative">
+    <!-- Main Content -->
+    <div class="flex-grow-1" style="margin-right: 20%; min-height: 100vh; min-width: 72vw; background-color: #f8f9fa;">
+        <div class="p-4 bg-white rounded-4 shadow-sm mx-4 my-4">
+            <!-- Store Header -->
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="bg-secondary rounded-circle p-3">
+                    <i class="bi bi-shop text-white fs-4"></i>
+                </div>
+                <div>
+                    <h2 class="mb-0">{{storeDetails.StoreName}}</h2>
+                    <div class="text-muted">
+                        ID: {{storeDetails.StoreId}} 
+                        <span class="ms-2">⭐ 4.9</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="mb-4">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterItems()">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Pills -->
+            <div class="mb-4">
+                <h5 class="mb-3">Find the menu you want</h5>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-light d-flex align-items-center gap-2 active category-btn" data-category="all">
+                        <i class="bi bi-grid"></i>
+                        All
+                    </button>
+                    <button class="btn btn-light d-flex align-items-center gap-2 category-btn" data-category="meal">
+                        <i class="bi bi-egg-fried"></i>
+                        Meal
+                    </button>
+                    <button class="btn btn-light d-flex align-items-center gap-2 category-btn" data-category="beverage">
+                        <i class="bi bi-cup-straw"></i>
+                        Beverage
+                    </button>
+                    <button class="btn btn-light d-flex align-items-center gap-2 category-btn" data-category="snacks">
+                        <i class="bi bi-cookie"></i>
+                        Snacks
+                    </button>
+                </div>
+            </div>
+
+            <!-- Menu Items Grid -->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="itemsContainer">
+                {% for item in items %}
+                <div class="col item-card" data-category="{{ item.Category|lower }}" data-name="{{ item.ItemName|lower }}">
+                    <div class="card h-100 border-0 shadow-sm" style="cursor: pointer;" onclick="showAlert({{ item}})">
+                        <div class="position-relative">
+                            <div class="bg-light rounded-3 p-4 text-center">
+                                {% if item['ItemPhoto'] %}
+                                    <img src="{{ item['ItemPhoto'] }}" class="card-img-top" alt="{{ item['ItemName'] }}" 
+                                         style="max-height: 150px; object-fit: contain;">
+                                {% else %}
+                                    <div class="bg-secondary rounded-circle p-4 mx-auto" style="width: 100px; height: 100px;">
+                                        <i class="bi bi-cart text-white fs-1"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">{{ item['ItemName'] }}</h5>
+                            <p class="card-text text-muted small mb-2">{{ item['ItemDescription'] }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">₱{{ item['ItemPrice'] }}</span>
+                                <button class="btn btn-primary orange rounded-circle add-to-cart-btn d-flex justify-content-center align-items-center" style="width: 32px; height: 32px;">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Sidebar -->
+    <div class="bg-white border-start shadow-sm" style="width: 20%; min-width: 250px; height: calc(100vh - 56px); position: fixed; right: 0; top: 56px; overflow-y: auto; z-index: 1000;">
+        <div class="p-3">
+            <h5 class="mb-3">Checkout</h5>
+            
+            <!-- Cart Items -->
+            <div class="cart-items mb-3" style="max-height: 60vh; overflow-y: auto;" id="cartItems">
+                <!-- Cart items will be dynamically added here -->
+            </div>
+
+            <!-- Total Amount -->
+            <div class="border-top pt-2 mb-3">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="small">Total Amount</span>
+                    <span class="fw-bold" id="totalAmount">₱0</span>
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="d-flex gap-2 mb-3">
+                <button class="btn btn-outline-secondary btn-sm flex-grow-1 payment-method-btn active" data-method="cash">
+                    <i class="bi bi-cash me-1"></i>Cash
+                </button>
+                <button class="btn btn-outline-secondary btn-sm flex-grow-1 payment-method-btn" data-method="gcash">
+                    <i class="bi bi-wallet2 me-1"></i>GCash
+                </button>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-grid gap-2">
+                <button class="btn orange btn-primary btn-sm" onclick="">Place Order</button>
+                <button class="btn btn-outline-secondary btn-sm" onclick="">Clear Cart</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .fs-7 {
+        font-size: 0.875rem;
+    }
+    .btn-light {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+    }
+    .btn-light:hover, .btn-light.active {
+        background-color: #e9ecef;
+    }
+    .card {
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .cart-items::-webkit-scrollbar {
+        width: 4px;
+    }
+    .cart-items::-webkit-scrollbar-thumb {
+        background-color: #dee2e6;
+        border-radius: 4px;
+    }
+    .payment-method-btn.active {
+        background-color: #e9ecef;
+    }
+    .orange {
+        background-color: #EB5700;
+    }
+    
+</style>
+{% endblock %}
+
+
+
+<script>
+    function showAlert(item) {
+    Swal.fire({
+        title: item.ItemName,
+        html: `
+            <div class="text-left">
+                <div class="mb-3">
+                    <img src="${item.ItemPhoto}" class="img-fluid rounded" style="max-width: 200px;">
+                </div>
+                <div class="mb-2">
+                    <strong>Price:</strong> 
+                    <span class="text-primary">${item.ItemPrice} PHP</span>
+                </div>
+                <div class="mb-2">
+                    <strong>Description:</strong><br>
+                    <p class="text-muted">${item.ItemDescription}</p>
+                </div>
+            </div>
+        `,
+        width: '400px',
+        showCancelButton: true,
+        confirmButtonText: 'Buy',
+        cancelButtonText: 'Close',
+        customClass: {
+            container: 'custom-swal-container',
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            htmlContainer: 'custom-swal-html',
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = `/store-admin/visit-store/${item.StoreId}`;
+        }
+    });
+}
+</script>
+{% endblock %}
+
+

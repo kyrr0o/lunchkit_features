@@ -1,0 +1,130 @@
+{% extends "auth/authbase.html" %}
+
+
+{% block head %}
+   <link rel="stylesheet" href="{{url_for('static', filename='css/formStyle.css')}}">
+{% endblock %}
+
+
+
+{% block content %}
+<div>
+    <div class="container">
+        <div class="form-container">
+            <h2 class="text-center mb-4">LunchKit Store Owner Login</h2>
+            <form id="signupForm" action="{{ url_for('auth.storeowner_login') }}" method="POST">
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    {{ form.email(class="form-control", id="email") }}
+                    <div class="error-feedback" id="email-error"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    {{ form.password(class="form-control", id="password") }}
+                    <div class="error-feedback" id="password-error"></div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-orange">Sign Up</button>
+                </div>
+
+                <div class="alert alert-success mt-3" role="alert" id="success-message" style="display: none;"></div>
+                <div class="alert alert-danger mt-3" role="alert" id="error-message" style="display: none;"></div>
+            </form>
+
+            <div class="mt-3 d-flex align-items-center gap-2">
+                <p class="mb-0">Don't have an account?</p>
+                <a href="{{url_for('auth.ownerSignup')}}" class="text-orange text-decoration-none hover-underline">Sign-up</a>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Reference the signup form
+            const form = document.getElementById('signupForm');
+            
+            // On sumbit even Handler
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset error messages
+                document.querySelectorAll('.error-feedback').forEach(el => el.style.display = 'none');
+                document.getElementById('success-message').style.display = 'none';
+                document.getElementById('error-message').style.display = 'none';
+    
+                // Create FormData object from form
+                const formData = new FormData(form);
+                
+                // Convert FormData to plain object
+                const plainFormData = Object.fromEntries(formData.entries());
+                
+                
+                // Post Request to the server with the form data
+                fetch('/auth/storeOwnerLogin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',  
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    // Convert form data to URL encoded string
+                    body: new URLSearchParams(plainFormData).toString()
+                })
+                .then(response => {
+                    // Reject promise if response is not 'ok' 
+                    if (!response.ok) {
+                        return response.json().then(err => Promise.reject(err));
+                    }
+
+                    // Returns response to next callback function when response is ok
+                    return response.json();
+                })
+                .then(data => {
+                    
+                    // Use sweet Alert to display message and status
+                    Swal.fire({
+                        title: data.success ? 'Success!' : 'Error!',
+                        text: data.message,
+                        icon: data.success ? 'success' : 'error',
+                        confirmButtonColor: '#fd7e14'
+                    }).then((result) => {
+                        if (result.isConfirmed && data.success) {
+
+                            // Reset form and redirect to store Homepage
+                            form.reset();
+                            window.location.href = data.redirect;       
+                        }
+                    });
+                })
+                .catch(error => {
+                    
+                    // Error handlers 
+                    if (error.errors) {
+                        // Handle validation errors
+                        for (const [field, message] of Object.entries(error.errors)) {
+                            const errorElement = document.getElementById(`${field}-error`);
+                            if (errorElement) {
+                                errorElement.textContent = message;
+                                errorElement.style.display = 'block';
+                            }
+                        }
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: error.message || 'An error occurred during registration',
+                            icon: 'error',
+                            confirmButtonColor: '#fd7e14'
+                        });
+                    }
+                })
+            });
+        });
+    </script>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "user/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center" style="width: 90vw;">
+    <h2>Explore Campus Best Sellers 🍔</h2>
+    <div class="input-group" style="width: 500px;">
+        <input type="text" class="form-control" placeholder="Search for food..." aria-label="Search for food">
+        <button class="btn btn-outline-secondary" type="button">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+  </div>
+  </div>
+  <div class="row gy-3 gx-4">
+
+
+    
+      <div class="d-flex gap-4 mt-4 flex-wrap">
+          {% for item in items %}
+          <div class="col-md-2" style="width: 13.6rem;">
+            <div class="card" style="cursor: pointer;" onclick="showAlert({{item}})">
+              <img src="{{ item['ItemPhoto'] }}" class="card-img-top" alt="{{ item['ItemName'] }}">
+              <div class="card-body text-justify-content-around">
+                <h5 class="card-title">
+                  <a href="#{{ item['ItemId'] }}" class="link-secondary link-offset-2 
+                    link-underline-opacity-25 link-underline-opacity-100-hover"
+                    type="text" data-bs-toggle="offcanvas" aria-controls="offcanvasRight"
+                    onclick="event.stopPropagation()">
+                    {{ item['ItemName'] }}
+                  </a>
+                </h5>
+                <p class="card-text text-muted">{{ item['ItemDescription'] }}</p>
+                <p class="card-text text-muted">Price: 
+                  <a href="#" class="link-secondary link-offset-2 
+                    link-underline-opacity-25 link-underline-opacity-100-hover"
+                    onclick="event.stopPropagation()">
+                    {{ item['ItemPrice'] }} PHP
+                  </a>
+                </p>
+              </div> 
+            </div>
+          </div>
+          {% endfor %}
+      </div>
+    </div>
+</div>
+
+
+        
+<script>
+function showAlert(item) {
+    Swal.fire({
+        title: item.ItemName,
+        html: `
+            <div class="text-left">
+                <div class="mb-3">
+                    <img src="${item.ItemPhoto}" class="img-fluid rounded" style="max-width: 200px;">
+                </div>
+                <div class="mb-2">
+                    <strong>Price:</strong> 
+                    <span class="text-primary">${item.ItemPrice} PHP</span>
+                </div>
+                <div class="mb-2">
+                    <strong>Description:</strong><br>
+                    <p class="text-muted">${item.ItemDescription}</p>
+                </div>
+            </div>
+        `,
+        width: '400px',
+        showCancelButton: true,
+        confirmButtonText: 'Go to Store',
+        cancelButtonText: 'Close',
+        customClass: {
+            container: 'custom-swal-container',
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            htmlContainer: 'custom-swal-html',
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = `/store-admin/visit-store/${item.StoreId}`;
+        }
+    });
+}
+</script>
+
+{% endblock %}

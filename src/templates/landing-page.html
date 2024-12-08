@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LunchKit</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="#home">
+        <img src="{{ url_for('static', filename='img/LunchKit-logo.png') }}" alt="LunchKit Logo" width="40" height="40" class="d-inline-block align-text-top">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="#home">Home</a>
+          <a class="nav-link" href="#highlights">Highlights</a>
+          <a class="nav-link" href="#whyLunchKit">Why LunchKit?</a>
+          <a class="nav-link" href="#selections">Selections</a>
+          <a class="nav-link" href="#storeRegistration">Store Registration</a>
+          <a class="nav-link" href="#about">About</a>
+        </div>
+      </div>
+
+      <div class="ms-3">
+        <a class="btn btn-warning" href="{{ url_for('auth.login') }}" role="button">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section id="home" class="hero-section d-flex align-items-center">
+    <div class="container">
+      <div class="hero-content">
+        <img src="{{ url_for('static', filename='img/LunchKit-logo.png') }}" alt="LunchKit Logo" width="550" height="auto">
+        <p>Desire food for your taste!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR SERVICES -->
+  <section id="highlights" class="section2 food-service">
+    <div class="container my-5">
+      <h2 class="section-title text-start mb-4" style="font-size: 2rem; font-weight: bold; text-align: center;">Our Services</h2>
+      <p class="section-subtitle text-start mb-5" style="font-size: 1.125rem; text-align: center; margin-bottom: 2rem;">LunchKit provides you with quality food, fast service, and convenient payment options.</p>
+  
+      <div class="row justify-content-center">
+  
+        <!-- Card 1 -->
+        <div class="col-md-3 mb-4">
+          <div class="card custom-card text-center">
+            <img src="{{ url_for('static', filename='img/card1.png') }}" class="card-img-top" alt="Card Image" height="190">
+            <h5 class="card-title">Quality Food</h5>
+            <p class="card-text">Experience delicious meals made with top-quality ingredients.</p>
+          </div>
+        </div>
+  
+        <!-- Card 2 -->
+        <div class="col-md-3 mb-4">
+          <div class="card custom-card text-center">
+            <img src="{{ url_for('static', filename='img/card2.png') }}" class="card-img-top" alt="Card Image">
+            <div class="card-body">
+              <h5 class="card-title">Fast Serving</h5>
+              <p class="card-text">Get your food fast—no long waits, just quick service.</p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Card 3 -->
+        <div class="col-md-3 mb-4">
+          <div class="card custom-card text-center">
+            <img src="{{ url_for('static', filename='img/card3.png') }}" class="card-img-top" alt="Card Image">
+            <div class="card-body">
+              <h5 class="card-title">Cash By Hand</h5>
+              <p class="card-text">Pay easily with cash upon pickup.</p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Card 4 -->
+        <div class="col-md-3 mb-4">
+          <div class="card custom-card text-center">
+            <img src="{{ url_for('static', filename='img/card4.png') }}" class="card-img-top" alt="Card Image">
+            <div class="card-body">
+              <h5 class="card-title">Cash By E-Wallets</h5>
+              <p class="card-text">Use e-wallets like GCash for quick, secure payments.</p>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </section>  
+
+  <!-- WHY LUNCHKIT? -->
+  <section id="whyLunchKit" class="section3 container py-4">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <img src="{{ url_for('static', filename='img/sec3-left-img.png') }}" alt="LunchKit" class="img-fluid" style="max-width: 90%; height: auto;">
+      </div>
+      <div class="col-lg-6 text-center text-lg-start">
+        <h2 class="display-5 mb-4 mt-5" style="font-size: 2rem; font-weight: bold; color: #333;">Why You’ll Love LunchKit</h2>
+  
+        <div class="d-flex flex-column gap-4">
+          <!-- Card 1 -->
+          <div class="card d-flex flex-row p-3 custom-card">
+            <img src="{{ url_for('static', filename='img/sec3-card1.png') }}" class="card-img-start custom-card-img" alt="Meal Option">
+            <div class="card-body">
+              <h5 class="card-title">Something for every hungry Iitians!</h5>
+              <p class="card-text">We’ve got every meal covered and more: snacks, combo meals, drinks, and desserts.</p>
+            </div>
+          </div>
+  
+          <!-- Card 2 -->
+          <div class="card d-flex flex-row p-3 custom-card">
+            <img src="{{ url_for('static', filename='img/sec3-card2.png') }}" class="card-img-start custom-card-img" alt="Pickup Service">
+            <div class="card-body">
+              <h5 class="card-title">Ready for Pickup</h5>
+              <p class="card-text">Sit back and relax, have us skip the line with pickup.</p>
+            </div>
+          </div>
+  
+          <!-- Card 3 -->
+          <div class="card d-flex flex-row p-3 custom-card">
+            <img src="{{ url_for('static', filename='img/sec3-card3.png') }}" class="card-img-start custom-card-img" alt="Store Building">
+            <div class="card-body">
+              <h5 class="card-title">Build Your Own Store</h5>
+              <p class="card-text">Join LunchKit and establish your own store.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>  
+
+  <!-- LUNCHKIT SELECTIONS -->
+  <section id="selections" class="offers-section py-5">
+    <div class="container">
+      <h2 class="section-title mb-5 text-center" style="font-size: 2rem; font-weight: bold; color: #EB5700;">LunchKit Selections</h2>
+      
+      <div class="row row-cols-1 row-cols-md-4 g-4">
+      
+        <!-- Offer 1 - Soup -->
+        <div class="col">
+          <div class="card h-100 d-flex flex-column">
+            <img src="{{ url_for('static', filename='img/sec4-1.png') }}" class="card-img-top" alt="Soup Offer">
+            <div class="card-body text-center">
+              <h5 class="card-title">Soup</h5>
+              <p class="card-text">Warm and comforting soups to satisfy your cravings.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Offer 2 - Meals -->
+        <div class="col">
+          <div class="card h-100 d-flex flex-column">
+            <img src="{{ url_for('static', filename='img/sec4-2.png') }}" class="card-img-top" alt="Meal Offer">
+            <div class="card-body text-center">
+              <h5 class="card-title">Meals</h5>
+              <p class="card-text">Hearty meals made fresh for your hunger.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Offer 3 - Beverages -->
+        <div class="col">
+          <div class="card h-100 d-flex flex-column">
+            <img src="{{ url_for('static', filename='img/sec4-3.png') }}" class="card-img-top" alt="Beverage Offer">
+            <div class="card-body text-center">
+              <h5 class="card-title">Beverage and Refreshments</h5>
+              <p class="card-text">Cool down with a refreshing drink anytime.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Offer 4 - Combo Deals -->
+        <div class="col">
+          <div class="card h-100 d-flex flex-column">
+            <img src="{{ url_for('static', filename='img/sec4-4.png') }}" class="card-img-top" alt="Combo Offer">
+            <div class="card-body text-center">
+              <h5 class="card-title">Combo Deals</h5>
+              <p class="card-text">Best value for your meal with our combo offers.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row row-cols-1 row-cols-md-4 g-4 mt-4">
+      
+        <!-- Offer 5 - Baked Goods -->
+        <div class="col">
+          <div class="card h-100 d-flex flex-column">
+            <img src="{{ url_for('static', filename='img/sec4-5.png') }}" class="card-img-top" alt="Baked Goods Offer">
+            <div class="card-body text-center">
+              <h5 class="card-title">Baked Goods</h5>
+              <p class="card-text">Delicious pastries and bread for every craving.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Offer 6 - Filipino Delicacies -->
+        <div class="col">
+          <div class="card h-100 d-flex flex-column">
+            <img src="{{ url_for('static', filename='img/sec4-6.png') }}" class="card-img-top" alt="Filipino Delicacies Offer">
+            <div class="card-body text-center">
+              <h5 class="card-title">Filipino Delicacies</h5>
+              <p class="card-text">Authentic Filipino treats and flavors.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Offer 7 - Grilled Meats -->
+        <div class="col">
+          <div class="card h-100 d-flex flex-column">
+            <img src="{{ url_for('static', filename='img/sec4-7.png') }}" class="card-img-top" alt="Grilled Meats Offer">
+            <div class="card-body text-center">
+              <h5 class="card-title">Grilled Meats</h5>
+              <p class="card-text">Savor the smoky, grilled goodness.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Offer 8 - Ice Cream & Desserts -->
+        <div class="col">
+          <div class="card h-100 d-flex flex-column">
+            <img src="{{ url_for('static', filename='img/sec4-8.png') }}" class="card-img-top" alt="Ice Cream & Desserts Offer">
+            <div class="card-body text-center">
+              <h5 class="card-title">Ice Cream & Desserts</h5>
+              <p class="card-text">Indulge in sweet, cool treats for dessert lovers.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- STORE REGISTRATION -->
+  <section id="storeRegistration" class="section5 container py-4">
+    <div class="row align-items-center">
+      <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
+        <h2 class="display-5 mb-4" style="font-size: 2rem; font-weight: bold; color: #333; margin-top: 70px;">Store Owners: Sign Up with LunchKit to tap hungry IITians</h2>
+        <p class="lead mb-4" style="font-size: 1rem;">
+          Get more pickup orders from LunchKit customers hungry for new campus food stores. 
+          Sign up with LunchKit campus stores to access hassle-free technology and marketing tools 
+          that will help you grow your business.
+        </p>
+        <a href="{{ url_for('auth.ownerSignup') }}" class="btn btn-warning btn-lg" style="font-weight: bold; padding: 0.75rem 1.5rem;">Register Now</a>
+      </div>
+  
+      <div class="col-lg-6 text-center">
+        <img src="{{ url_for('static', filename='img/sec5-right-img.png') }}" alt="Register Store" class="img-fluid" style="max-width: 60%; height: auto; margin-top: 30px;">
+      </div>
+    </div>
+  </section>
+  
+  <!-- ABOUT SECTION -->
+  <section id="about" class="about-section">
+    <div class="container text-center">
+      <img src="{{ url_for('static', filename='img/LunchKit-logo.png') }}" alt="About Image" class="about-image mb-4">
+      <p class="about-text">
+        Lunchkit is your campus-based food marketplace, designed to make ordering meals simple, fast, and convenient. 
+        With a variety of local food options from trusted campus stores, you can enjoy quality dishes with the convenience 
+        of both cash and digital payments. Whether you're looking for a quick bite or a hearty meal, Lunchkit offers a seamless 
+        experience from browsing to checkout—all in one easy-to-use platform.
+      </p>
+    </div>
+  </section>  
+
+  <!-- FOOTER -->
+  <footer class="footer-section text-white py-4" style="background-color: #333;">
+    <div class="container text-center">
+      <p>&copy; 2024 LunchKit. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

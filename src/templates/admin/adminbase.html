@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>MSU-IIT LunchKit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+    <header class="navbar navbar-expand-lg" style="padding: 3px 30px; background-color: #FDEEEA; border-bottom: 2px solid #ddd; z-index: 1000; position: relative;">
+        <a class="navbar-brand" style="font-size: 2rem; color: #EB5700;" href="/home"><strong>LuncKit</strong></a>
+        
+        <!-- Navigation links -->
+        <ul class="navbar-nav flex-row ms-auto d-none d-md-flex">
+            <li class="nav-item">
+                <a class="btn" href="{{ url_for('auth.logout') }}" div class="icon"><ion-icon name="log-out-outline"></ion-icon></div><span class="title">Log Out</span></a>
+            </li>
+        </ul>
+        </div>
+    </header>
+    <div class="container-fluid">
+        <div class="row">
+    <!-- Sidebar Navigation -->
+                <nav class="col-md-2 col-lg-2 d-md-block bd-sidebar">
+                    <ul>
+                        <li><a href="#" role="button"><div class="icon"><ion-icon name="home-outline"></ion-icon></div><span class="title">Applications</span></a></li>     
+                        <li><a href="{{ url_for('auth.logout') }}"><div class="icon"><ion-icon name="log-out-outline"></ion-icon></div><span class="title">Log Out</span></a></li>
+                        </ul>
+                    </nav>
+                <div class="col-content col-md-9 col-xl-10">
+                    <div class="container-fluid-content">
+                        <div class="row">
+                            <div class="col-sm-3">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">
+                                    <a href="{{ url_for('admin.ApprovedList')}}"  class="btn btn-link">Approved List</a>
+                                </h5>
+                            </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">
+                                        <a href="{{ url_for('admin.PendingList')}}" class="btn btn-link">Pending List</a>
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="w-100 d-none d-md-block"></div>
+                        <!-- Main Content -->
+                            <main class="col">
+                                <div>
+                                    {% block content %}{% endblock %}
+                                </div>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    
+    <script src="{{ url_for('static', filename='js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+</body>
+</html>
+<style>
+.container {
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.container-fluid-content{
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+</style>
+

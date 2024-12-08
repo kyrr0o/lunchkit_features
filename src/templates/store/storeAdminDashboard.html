@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>MSU-IIT LunchKit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/storeOwnerPage.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    
+</head>
+<body>
+
+    <header class="navbar navbar-expand-lg" style="padding: 3px 30px; background-color: #FDEEEA; border-bottom: 2px solid #ddd; z-index: 1000; position: relative;">
+        <a class="navbar-brand" style="font-size: 2rem; color: #EB5700;" href="#"><strong>LunchKit</strong></a>
+       
+    </header>
+    {% block content %}
+           
+    {% endblock %}
+    <script src="{{ url_for('static', filename='js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>

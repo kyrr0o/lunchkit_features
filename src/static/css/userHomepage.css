@@ -1,0 +1,131 @@
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #ff6c00;
+    --sidebar-width: 80px;
+    --header-height: 60px;
+}
+
+body {
+    overflow-x: hidden;
+    background-color: #f5f5f5;
+}
+
+/* Header Styles */
+.navbar {
+    height: var(--header-height);
+    padding: 0 1.5rem !important;
+    background-color: white !important;
+    border-bottom: 1px solid #eee !important;
+}
+
+.navbar-brand {
+    font-size: 1.5rem !important;
+    color: var(--primary-color) !important;
+}
+
+/* Sidebar Styles */
+.bd-sidebar {
+    background-color: var(--primary-color);
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-width) !important;
+    padding: 0;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.bd-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 1rem;
+}
+
+.bd-sidebar ul li {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.bd-sidebar ul li a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.bd-sidebar ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.bd-sidebar .icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.bd-sidebar .title {
+    display: none;  /* Hide text for icon-only sidebar */
+}
+
+/* Main Content Styles */
+main {
+    margin-left: var(--sidebar-width) !important;
+    padding: 1.5rem !important;
+    margin-top: var(--header-height);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .bd-sidebar {
+        display: none;
+    }
+    
+    main {
+        margin-left: 0 !important;
+    }
+}
+
+/* Container adjustments */
+.container-fluid {
+    padding: 0;
+}
+
+.row {
+    margin: 0;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Icon Styles */
+ion-icon {
+    font-size: 24px;
+    --ionicon-stroke-width: 48px;
+}

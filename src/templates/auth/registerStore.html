@@ -1,0 +1,362 @@
+{% extends "auth/authbase.html" %}
+
+{% block head %}
+   <link rel="stylesheet" href="{{url_for('static', filename='css/formStyle.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-container">
+        <h2 class="text-center mb-4">LunchKit Store Registration</h2>
+        <form id="storeRegistration" method="POST">
+            {{ form.csrf_token }}
+            
+            <div class="mb-3">
+                <label for="store_name" class="form-label">{{form.store_name.label}}</label>
+                {{ form.store_name(class="form-control", id="store_name") }}
+                <div class="error-feedback" id="store_name-error"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">{{form.email.label}}</label>
+                {{ form.email(class="form-control", id="email") }}
+                <div class="error-feedback" id="email-error"></div>
+            </div>
+
+            <!-- Sanitary Permit -->
+            <div class="mb-3">
+                <label for="sanitary_permit" class="form-label">{{ form.sanitary_permit.label }}</label>
+                <div class="input-group">
+                    <input type="file" class="form-control cloudinary-fileupload" 
+                           id="sanitary_permit" 
+                           name="sanitary_permit"
+                           data-field="sanitary_permit"
+                           accept="image/jpeg,image/png,image/jpg">
+                    <button type="button" class="btn btn-secondary preview-btn" 
+                            onclick="previewFile('sanitary_permit')" disabled>
+                        Preview
+                    </button>
+                </div>
+                <div class="upload-status small text-muted mt-1" id="sanitary_permit_status">Not selected</div>
+                <div class="error-feedback" id="sanitary_permit-error"></div>
+            </div>
+
+            <!-- Certificate of Business Name Registration -->
+            <div class="mb-3">
+                <label for="certificate_of_business_name_registration" class="form-label">
+                    {{ form.certificate_of_business_name_registration.label }}
+                </label>
+                <div class="input-group">
+                    <input type="file" class="form-control cloudinary-fileupload" 
+                           id="certificate_of_business_name_registration" 
+                           name="certificate_of_business_name_registration"
+                           data-field="certificate_of_business_name_registration"
+                           accept="image/jpeg,image/png,image/jpg">
+                    <button type="button" class="btn btn-secondary preview-btn" 
+                            onclick="previewFile('certificate_of_business_name_registration')" disabled>
+                        Preview
+                    </button>
+                </div>
+                <div class="upload-status small text-muted mt-1" id="certificate_of_business_name_registration_status">Not selected</div>
+                <div class="error-feedback" id="certificate_of_business_name_registration-error"></div>
+            </div>
+
+            <!-- Business Permit -->
+            <div class="mb-3">
+                <label for="business_permit" class="form-label">{{ form.business_permit.label }}</label>
+                <div class="input-group">
+                    <input type="file" class="form-control cloudinary-fileupload" 
+                           id="business_permit" 
+                           name="business_permit"
+                           data-field="business_permit"
+                           accept="image/jpeg,image/png,image/jpg">
+                    <button type="button" class="btn btn-secondary preview-btn" 
+                            onclick="previewFile('business_permit')" disabled>
+                        Preview
+                    </button>
+                </div>
+                <div class="upload-status small text-muted mt-1" id="business_permit_status">Not selected</div>
+                <div class="error-feedback" id="business_permit-error"></div>
+            </div>
+
+            <!-- Fire Safety -->
+            <div class="mb-3">
+                <label for="fire_safety_inspection_certificate" class="form-label">
+                    {{ form.fire_safety_inspection_certificate.label }}
+                </label>
+                <div class="input-group">
+                    <input type="file" class="form-control cloudinary-fileupload" 
+                           id="fire_safety_inspection_certificate" 
+                           name="fire_safety_inspection_certificate"
+                           data-field="fire_safety_inspection_certificate"
+                           accept="image/jpeg,image/png,image/jpg">
+                    <button type="button" class="btn btn-secondary preview-btn" 
+                            onclick="previewFile('fire_safety_inspection_certificate')" disabled>
+                        Preview
+                    </button>
+                </div>
+                <div class="upload-status small text-muted mt-1" id="fire_safety_inspection_certificate_status">Not selected</div>
+                <div class="error-feedback" id="fire_safety_inspection_certificate-error"></div>
+            </div>
+
+            <!-- Certificate of Registration -->
+            <div class="mb-3">
+                <label for="certificate_of_registration" class="form-label">
+                    {{ form.certificate_of_registration.label }}
+                </label>
+                <div class="input-group">
+                    <input type="file" class="form-control cloudinary-fileupload" 
+                           id="certificate_of_registration" 
+                           name="certificate_of_registration"
+                           data-field="certificate_of_registration"
+                           accept="image/jpeg,image/png,image/jpg">
+                    <button type="button" class="btn btn-secondary preview-btn" 
+                            onclick="previewFile('certificate_of_registration')" disabled>
+                        Preview
+                    </button>
+                </div>
+                <div class="upload-status small text-muted mt-1" id="certificate_of_registration_status">Not selected</div>
+                <div class="error-feedback" id="certificate_of_registration-error"></div>
+            </div>
+
+            <!-- Tax Payment Form -->
+            <div class="mb-3">
+                <label for="tax_payment_form" class="form-label">{{ form.tax_payment_form.label }}</label>
+                <div class="input-group">
+                    <input type="file" class="form-control cloudinary-fileupload" 
+                           id="tax_payment_form" 
+                           name="tax_payment_form"
+                           data-field="tax_payment_form"
+                           accept="image/jpeg,image/png,image/jpg">
+                    <button type="button" class="btn btn-secondary preview-btn" 
+                            onclick="previewFile('tax_payment_form')" disabled>
+                        Preview
+                    </button>
+                </div>
+                <div class="upload-status small text-muted mt-1" id="tax_payment_form_status">Not selected</div>
+                <div class="error-feedback" id="tax_payment_form-error"></div>
+            </div>
+
+            <div class="alert alert-success mt-3" role="alert" id="success-message" style="display: none;"></div>
+            <div class="alert alert-danger mt-3" role="alert" id="error-message" style="display: none;"></div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-orange" id="submitBtn">Submit Registration</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+
+
+
+    // Validator to limit file size live
+    function validateFileSize(file, maxSizeMB = 5) {
+
+        // Convert MB to bytes
+        const maxSizeBytes = maxSizeMB * 1024 * 1024;
+        if (file.size > maxSizeBytes) {
+            return `File ${file.name} is too large. Maximum size is ${maxSizeMB}MB.`;
+        }
+        return null;
+    }
+
+
+    // Temporarily holds the selected files
+    const selectedFiles = {};
+
+    // Preview function
+    async function previewFile(fieldName) {
+        const fileInput = document.getElementById(fieldName);
+        const file = fileInput.files[0];
+        
+        if (!file) return;
+
+        // Store the file for validation
+        selectedFiles[fieldName] = file;
+
+        const reader = new FileReader();
+
+        // Using sweetAlert to render the preview for documents during each upload
+        reader.onload = function(e) {
+            Swal.fire({
+                title: 'Document Preview',
+                html: `
+                    <div class="text-start">
+                        <p class="mb-2">File Name: ${file.name}</p>
+                        <p class="mb-2">File Size: ${(file.size / 1024).toFixed(2)} KB</p>
+                    </div>
+                    <img src="${e.target.result}" class="img-fluid" style="max-height: 400px">
+                `,
+                confirmButtonColor: '#fd7e14',
+                confirmButtonText: 'Okay'
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Update status display
+    function updateFileStatus(field, status, className) {
+        const statusElement = document.getElementById(`${field}_status`);
+        if (statusElement) {
+            statusElement.textContent = status;
+            statusElement.className = `upload-status small ${className} mt-1`;
+        }
+    }
+
+    // File input listeners
+    document.querySelectorAll('.cloudinary-fileupload').forEach(input => {
+        input.addEventListener('change', (e) => {
+            const field = e.target.id;
+            const file = e.target.files[0];
+            
+            if (file) {
+
+                // Check file size
+                const sizeError = validateFileSize(file);
+                    if (sizeError) {
+                        // Show error
+                        Swal.fire({
+                            title: 'File Too Large',
+                            text: sizeError,
+                            icon: 'error',
+                            confirmButtonColor: '#fd7e14'
+                        });
+
+                        // Reset file input
+                        e.target.value = '';
+                        updateFileStatus(field, 'Not selected', 'text-muted');
+                        return;
+                    }
+
+
+
+                selectedFiles[field] = file;
+
+                // Enable preview button dynamically of the field that has been updated
+                const previewBtn = document.querySelector(`button[onclick="previewFile('${field}')"]`);
+                if (previewBtn) {
+                    previewBtn.disabled = false;
+                }
+
+                // If it already is in this part then validation is complete and no error has occurred
+                // Update the status of the file field
+                updateFileStatus(field, 'Selected ✓', 'text-success');
+
+                // Show preview immediately
+                previewFile(field);
+            } else {
+                delete selectedFiles[field];
+                const previewBtn = document.querySelector(`button[onclick="previewFile('${field}')"]`);
+                if (previewBtn) {
+                    previewBtn.disabled = true;
+                }
+                updateFileStatus(field, 'Not selected', 'text-muted');
+            }
+        });
+    });
+
+    // Form submission
+    document.getElementById('storeRegistration').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Validate all required fields are filled
+        const requiredFields = ['store_name', 'email'];
+        const fileFields = ['sanitary_permit', 'certificate_of_business_name_registration', 
+                          'business_permit', 'fire_safety_inspection_certificate', 
+                          'certificate_of_registration', 'tax_payment_form'];
+
+        // Check text fields
+        for (const field of requiredFields) {
+            if (!this[field].value) {
+                Swal.fire({
+                    title: 'Missing Information',
+                    text: `Please fill in ${field.replace('_', ' ')}`,
+                    icon: 'warning',
+                    confirmButtonColor: '#fd7e14'
+                });
+                return;
+            }
+        }
+
+        // Check file fields
+        for (const field of fileFields) {
+            const fileInput = document.getElementById(field);
+            if (!fileInput.files[0]) {
+                Swal.fire({
+                    title: 'Missing Document',
+                    text: `Please select ${field.replace(/_/g, ' ')}`,
+                    icon: 'warning',
+                    confirmButtonColor: '#fd7e14'
+                });
+                return;
+            }
+        }
+
+        // Confirm submission
+        const confirmResult = await Swal.fire({
+            title: 'Confirm Registration',
+            text: 'Are you sure you want to finish registration? This will upload all your documents.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, submit',
+            cancelButtonText: 'No, review',
+            confirmButtonColor: '#fd7e14',
+            cancelButtonColor: '#6c757d'
+        });
+
+        if (!confirmResult.isConfirmed) return;
+
+        // Show loading modal
+        const loadingModal = Swal.fire({
+            title: 'Uploading Documents',
+            html: 'Please wait while we process your registration...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        try {
+            // Create FormData
+            const formData = new FormData(this);
+            
+            // Send to backend
+            const response = await fetch("{{ url_for('auth.register_store') }}", {
+                method: 'POST',
+                body: formData
+            });
+
+            // Retrieve the result
+            const result = await response.json();
+
+            // Close loading modal
+            loadingModal.close();
+
+            if (response.ok) {
+                await Swal.fire({
+                    title: 'Registration Now Pending!',
+                    text: result.message,
+                    icon: 'success',
+                    confirmButtonColor: '#fd7e14'
+                });
+                window.location.href = "{{ url_for('auth.ownerLogin') }}";
+            } else {
+                throw new Error(result.message || 'Failed to submit registration');
+            }
+
+        } catch (error) {
+            // Close loading modal
+            loadingModal.close();
+            
+            Swal.fire({
+                title: 'Error!',
+                text: error.message || 'An error occurred during registration',
+                icon: 'error',
+                confirmButtonColor: '#fd7e14'
+            });
+        }
+    });
+</script>
+{% endblock %}

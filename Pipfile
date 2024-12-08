@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+flask-wtf = "*"
+python-dotenv = "*"
+pymysql = "*"
+google-auth = "*"
+google-auth-oauthlib = "*"
+requests = "*"
+flask-session = "*"
+cryptography = "*"
+wtforms = "*"
+email-validator = "*"
+bcrypt = "*"
+cloudinary = "*"
+flask-mail = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
